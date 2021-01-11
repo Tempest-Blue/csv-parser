@@ -51,7 +51,7 @@ function log(err) {
             }
         }
 
-        missing = JSON.parse(JSON.stringify(newDB));
+        missing = JSON.parse(JSON.stringify(oldDB));
         // Reference old db object as we're going through new db
         for (line in newFile) {
             // Line must not be blank
@@ -115,16 +115,19 @@ function log(err) {
 
         var oldDbCorruptionArray = oldDB[corruptedTestPrimaryKey];
         var newDbCorruptionArray = newDB[corruptedTestPrimaryKey];
+        var corruptionTestPassed = false;
         for (index in oldDbCorruptionArray) {
             if (oldDbCorruptionArray[index] != newDbCorruptionArray) {
-                console.log('Corrupted Test Passed - ' + 'Old[' + oldDB[corruptedTestPrimaryKey] + ']  New[' + newDB[corruptedTestPrimaryKey] + ']');
+                console.log('Corrupted Test Passed - ' + 'Old[' + oldDB[corruptedTestPrimaryKey] + '], New[' + newDB[corruptedTestPrimaryKey] + ']');
+                corruptionTestPassed = true;
                 break;
             }
+        }
+        if (!corruptionTestPassed) {
+            console.log('Corrupted Test Failed');
         }
         
     } catch (err) {
         return err;
     }
 })();
-
-
