@@ -87,15 +87,10 @@ function log(err) {
         // Logging
         console.log('Old DB Size - ' +  (oldFile.length - 1));
         console.log('New DB Size - ' +  (newFile.length - 1));
-        console.log('Matching - ' +  matched);
-        console.log('Missing - ' +  Object.keys(missing).length);
-        console.log('Corrupted - ' + Object.keys(corrupted).length);
-        console.log('Created - ' + Object.keys(newlyCreated).length + '\n');
-
-        // Identified Data 
-        // console.log('Missing - ' + JSON.stringify(missing) + '\n\n\n');
-        // console.log('Corrupted - ' + JSON.stringify(corrupted) + '\n\n\n');
-        // console.log('Created - ' + JSON.stringify(newlyCreated) + '\n\n\n');
+        console.log('Lines Matching - ' +  matched);
+        console.log('Lines Missing - ' +  Object.keys(missing).length);
+        console.log('Lines Corrupted - ' + Object.keys(corrupted).length);
+        console.log('Newly Created - ' + Object.keys(newlyCreated).length + '\n');
 
         // Testing
         var missingArray = Object.keys(missing);
@@ -126,6 +121,11 @@ function log(err) {
         if (!corruptionTestPassed) {
             console.log('Corrupted Test Failed');
         }
+
+        // Identified Data 
+        console.log('Missing - ' + JSON.stringify(missing) + '\n\n\n');
+        console.log('Corrupted - ' + JSON.stringify(corrupted) + '\n\n\n');
+        console.log('Created - ' + JSON.stringify(newlyCreated) + '\n\n\n');
         
     } catch (err) {
         return err;
