@@ -94,32 +94,45 @@ function log(err) {
 
         // Testing
         var missingArray = Object.keys(missing);
-        var randomMissingIndex = Math.floor(Math.random() * (missingArray.length + 1)); // random number between 0 and the size of missing
-        var missingTestPrimaryKey = missingArray[randomMissingIndex];
+        if (missingArray.length) {
+            var randomMissingIndex = Math.floor(Math.random() * (missingArray.length + 1)); // random number between 0 and the size of missing
+            var missingTestPrimaryKey = missingArray[randomMissingIndex];
+            console.log('Missing Test Passed - ' + (oldDB[missingTestPrimaryKey] && !newDB[missingTestPrimaryKey]));
+        }
+        else {
+            console.log('Missing Test Passed - No records missing');
+        }
+
+        var newlyCreatedArray = Object.keys(newlyCreated);
+        if (newlyCreatedArray.length) {
+            var randomNewlyCreatedIndex = Math.floor(Math.random() * (newlyCreatedArray.length + 1)); // random number between 0 and the size of newlyCreated
+            var newlyCreatedTestPrimaryKey = newlyCreatedArray[randomNewlyCreatedIndex];
+            console.log('Newly Created Test Passed - ' + (!oldDB[newlyCreatedTestPrimaryKey] && (newDB[newlyCreatedTestPrimaryKey] != null)));
+        }
+        else {
+            console.log('Newly Created Test Passed - No newly created records');
+        }
 
         var corruptedArray = Object.keys(corrupted);
-        var randomCorruptedIndex = Math.floor(Math.random() * (corruptedArray.length + 1)); // random number between 0 and the size of corrupted
-        var corruptedTestPrimaryKey = corruptedArray[randomCorruptedIndex];
-        
-        var newlyCreatedArray = Object.keys(newlyCreated);
-        var randomNewlyCreatedIndex = Math.floor(Math.random() * (newlyCreatedArray.length + 1)); // random number between 0 and the size of newlyCreated
-        var newlyCreatedTestPrimaryKey = newlyCreatedArray[randomNewlyCreatedIndex];
-
-        console.log('Missing Test Passed - ' + (oldDB[missingTestPrimaryKey] && !newDB[missingTestPrimaryKey]));
-        console.log('Newly Created Test Passed - ' + (!oldDB[newlyCreatedTestPrimaryKey] && (newDB[newlyCreatedTestPrimaryKey] != null)));
-
-        var oldDbCorruptionArray = oldDB[corruptedTestPrimaryKey];
-        var newDbCorruptionArray = newDB[corruptedTestPrimaryKey];
-        var corruptionTestPassed = false;
-        for (index in oldDbCorruptionArray) {
-            if (oldDbCorruptionArray[index] != newDbCorruptionArray) {
-                console.log('Corrupted Test Passed - ' + 'Old[' + oldDB[corruptedTestPrimaryKey] + '], New[' + newDB[corruptedTestPrimaryKey] + ']');
-                corruptionTestPassed = true;
-                break;
+        if (corruptedArray.length) {
+            var randomCorruptedIndex = Math.floor(Math.random() * (corruptedArray.length + 1)); // random number between 0 and the size of corrupted
+            var corruptedTestPrimaryKey = corruptedArray[randomCorruptedIndex];
+            var oldDbCorruptionArray = oldDB[corruptedTestPrimaryKey];
+            var newDbCorruptionArray = newDB[corruptedTestPrimaryKey];
+            var corruptionTestPassed = false;
+            for (index in oldDbCorruptionArray) {
+                if (oldDbCorruptionArray[index] != newDbCorruptionArray) {
+                    console.log('Corrupted Test Passed - ' + 'Old[' + oldDB[corruptedTestPrimaryKey] + '], New[' + newDB[corruptedTestPrimaryKey] + ']');
+                    corruptionTestPassed = true;
+                    break;
+                }
+            }
+            if (!corruptionTestPassed) {
+                console.log('Corrupted Test Failed');
             }
         }
-        if (!corruptionTestPassed) {
-            console.log('Corrupted Test Failed');
+        else {
+            console.log('Corrupted Test Passed - No records corrupted');
         }
 
         // Identified Data 
@@ -128,6 +141,6 @@ function log(err) {
         console.log('Created - ' + JSON.stringify(newlyCreated) + '\n\n\n');
         
     } catch (err) {
-        return err;
+        return log(err);
     }
 })();
